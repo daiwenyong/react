@@ -28,10 +28,16 @@ import CustomHooks from './page/customHooks/index'
 import SourceCode  from './page/sourceCode/index'
 import BeginWork from './page/beginWork/index'
 import './app.scss'
+import Form from './page/davion/form'
 
 
 console.log(require.context,'require.context()')
 const menusList = [
+  {
+    name:'davion-form',
+    path:'/form',
+    component:Form
+  },
   {
     name: '2_认识Jsx',
     path: '/jsx',
