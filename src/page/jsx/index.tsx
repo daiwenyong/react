@@ -35,6 +35,7 @@ class Index extends React.Component{
             </div>
         )
         const { children } = reactElement.props
+
         /* 第一步 ： 扁平化 children  */
         const flatChildren = React.Children.toArray(children)
         // console.log('🚀 ~ file: index.tsx:40 ~ Index ~ Children:', typeof React.Children) object
