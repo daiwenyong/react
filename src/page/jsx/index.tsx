@@ -34,6 +34,7 @@ class Index extends React.Component{
                 <button onClick={()=> console.log( this.render() )} >打印render后的内容</button>
             </div>
         )
+        console.log(1111111111111,reactElement)
         const { children } = reactElement.props
 
         /* 第一步 ： 扁平化 children  */
@@ -89,6 +90,8 @@ class Index extends React.Component{
 // }
 
 
+// createElement 把上面写的 jsx，变成 element 对象;
+// 而 cloneElement 的作用是以 element 元素为样板克隆并返回新的 React element 元素
 
 
 export default Index
