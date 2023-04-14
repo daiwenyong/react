@@ -127,3 +127,43 @@ export default function Index(){
     return  <div ref={ currentDom } >ref对象模式获取元素或组件</div>
 }
 ```
+
+# context
+## 提供
+```js
+const ThemeProvider = ThemeContext.Provider  //提供者
+export default function ProviderDemo(){
+    const [ contextValue , setContextValue ] = React.useState({  color:'#ccc', background:'pink' })
+    return <div>
+        <ThemeProvider value={ contextValue } > 
+            <Son />
+        </ThemeProvider>
+    </div>
+}
+```
+## 消费
+### useContext
+```js
+const ThemeContext = React.createContext(null)
+// 函数组件 - useContext方式
+function ConsumerDemo(){
+    const  contextValue = React.useContext(ThemeContext) /*  */
+    const { color,background } = contextValue
+    return <div style={{ color,background } } >消费者</div> 
+}
+const Son = ()=> <ConsumerDemo />
+```
+```js
+### ThemeContext.Consumer
+const ThemeConsumer = ThemeContext.Consumer // 订阅消费者
+function ConsumerDemo(props){
+    const { color,background } = props
+    return <div style={{ color,background } } >消费者</div> 
+}
+const Son = () => (
+    <ThemeConsumer>
+       { /* 将 context 内容转化成 props  */ }
+       { (contextValue)=> <ConsumerDemo  {...contextValue}  /> }
+    </ThemeConsumer>
+) 
+```
