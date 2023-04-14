@@ -102,3 +102,28 @@ useEffect(()=>{},[])
         }
 },[])
 ``` 
+
+# ref
+## 类ref
+```js
+class Index extends React.Component{
+    constructor(props){
+       super(props)
+       this.currentDom = React.createRef(null)
+    }
+    componentDidMount(){
+        console.log(this.currentDom)// .current 为dom
+    }
+    render= () => <div ref={ this.currentDom } >ref对象模式获取元素或组件</div>
+}
+```
+## 函数ref
+```js
+export default function Index(){
+    const currentDom = React.useRef(null)
+    React.useEffect(()=>{
+        console.log( currentDom.current ) // div
+    },[])
+    return  <div ref={ currentDom } >ref对象模式获取元素或组件</div>
+}
+```
