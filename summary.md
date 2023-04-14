@@ -73,3 +73,32 @@ handleClick= () => {
 - setSate是和老state进行合并处理 useState是重新赋值
 - 有监听变化的callback useEffect监听
 - 在不是pureComponent，只要调用setState就会触发更新。useState的dispatchAction会默认比较两次state是否相同然后决定是否更新。
+
+# lifecycle
+## 初始化
+`constructor -> getDerivedStateFroProps / componentWillMount -> render -> componentDidMount`
+## 更新
+`componentWillReceiveProps( props 改变) / getDerivedStateFromProp -> shouldComponentUpdate -> componentWillUpdate -> render -> getSnapshotBeforeUpdate -> componentDidUpdate`
+## useEffect 和 useLayoutEffect 
+修改 DOM ，改变布局就用 useLayoutEffect ，其他情况就用 useEffect 
+## componentDidUpdate
+```js
+useEffect(()=>{})
+useEffect 是异步执行，默认初始化执行一次
+componentDidUpdate 是同步执行  组件更新后执行
+
+```
+## componentDidMount
+```js
+useEffect(()=>{},[])
+第二个参数不传，函数每次执行。传[]初始化执行一次
+```
+## componentWillUnMount
+```js
+ React.useEffect(()=>{
+        /* 请求数据 ， 事件监听 ， 操纵dom ， 增加定时器，延时器 */
+        return function componentWillUnmount(){
+            /* 解除事件监听器 ，清除定时器，延时器 */
+        }
+},[])
+``` 
