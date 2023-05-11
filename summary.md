@@ -61,7 +61,7 @@ handleClick= () => {
         this.setState({ number:this.state.number + 1 },()=>{   console.log( 'callback3', this.state.number)  })
         console.log(this.state.number)
 }
-// 0, 0, 0, callback1 1 ,callback2 1 ,callback3 1
+// 0, 0, 0, callback1 1 ,callback2 1 ,callback3 1  批量更新
 ```
 如果把事件包在定时器中，则输出`callback1 1 , 1, callback2 2 , 2,callback3 3 , 3`
 
@@ -76,7 +76,7 @@ handleClick= () => {
 
 # lifecycle
 ## 初始化
-`constructor -> getDerivedStateFroProps / componentWillMount -> render -> componentDidMount`
+`constructor -> getDerivedStateFromProps / componentWillMount -> render -> componentDidMount`
 ## 更新
 `componentWillReceiveProps( props 改变) / getDerivedStateFromProp -> shouldComponentUpdate -> componentWillUpdate -> render -> getSnapshotBeforeUpdate -> componentDidUpdate`
 ## useEffect 和 useLayoutEffect 
@@ -129,7 +129,12 @@ export default function Index(){
 ```
 
 # context
-## 提供
+```js
+const ThemeContext = React.createContext(null) //
+const ThemeProvider = ThemeContext.Provider  //提供者
+const ThemeConsumer = ThemeContext.Consumer // 订阅消费者
+```
+## 提供者
 ```js
 const ThemeProvider = ThemeContext.Provider  //提供者
 export default function ProviderDemo(){
@@ -153,8 +158,8 @@ function ConsumerDemo(){
 }
 const Son = ()=> <ConsumerDemo />
 ```
-```js
 ### ThemeContext.Consumer
+```js
 const ThemeConsumer = ThemeContext.Consumer // 订阅消费者
 function ConsumerDemo(props){
     const { color,background } = props
