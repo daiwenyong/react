@@ -1,5 +1,5 @@
 # jsx
-createElement 把上面写的 jsx，变成 element 对象; 而 cloneElement 的作用是以 element 元素为样板克隆并返回新的 React element 元素
+createElement 把上面写的 jsx，变成 react element 对象; 而 cloneElement 的作用是以 element 元素为样板克隆并返回新的 React element 元素
 
 # component
 在 class 组件中，除了继承 React.Component ，底层还加入了 updater 对象，组件中调用的 setState 和 forceUpdate 本质上是调用了 updater 对象上的 enqueueSetState 和 enqueueForceUpdate 方法。
@@ -146,6 +146,7 @@ export default function ProviderDemo(){
     </div>
 }
 ```
+
 ## 消费
 ### useContext
 ```js
@@ -172,3 +173,22 @@ const Son = () => (
     </ThemeConsumer>
 ) 
 ```
+
+## 调度
+vue组件粒度更新，能够快速响应。react从根节点开始diff,找出不同更新。在一次更新调度过程中，workLoop 会更新执行每一个待更新的 fiber 。他们的区别就是异步模式会调用一个 shouldYield() ，如果当前浏览器没有空余时间， shouldYield 会中止循环，直到浏览器有空闲时间后再继续遍历，从而达到终止渲染的目的。这样就解决了一次性遍历大量的 fiber ，导致浏览器没有时间执行一些渲染任务，导致了页面卡顿。
+
+### 时间分片
+1. 递归执行setTimeout,会有4ms时间差
+2. MessageChannel
+
+- taskQueue 存放的是过期任务，根据任务的过期时间expirationTime排序，在workLoop中循环完成这些任务
+- timeQueue 存放的是没有过期任务，根据任务的开始时间排序，在调度workLoop中会用advanceTimers检查任务是否过期，过期就放入taskQueue队列
+
+scheduleCallback 流程如下。
+
+- 创建一个新的任务 newTask。
+- 通过任务的开始时间( startTime ) 和 当前时间( currentTime ) 比较:当 startTime > currentTime, 说明未过期, 存到 timerQueue，当 startTime <= currentTime, 说明已过期, 存到 taskQueue。
+- 如果任务过期，并且没有调度中的任务，那么调度 requestHostCallback。本质上调度的是 flushWork。
+- 如果任务没有过期，用 requestHostTimeout 延时执行 handleTimeout。
+
+
