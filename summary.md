@@ -192,3 +192,56 @@ scheduleCallback 流程如下。
 - 如果任务没有过期，用 requestHostTimeout 延时执行 handleTimeout。
 
 
+## fiber
+fiber诞生React16版本，fiber架构就是解决大型应用卡顿。可以理解fiber就是react 的虚拟dom。
+
+react15以及之前递归遍历更新，一旦开始无法中断。
+
+更新fiber的过程叫做 `Reconciler(调和器)`，每一个fiber都可以作为一个执行单元来处理。每个fiber根据自身的过期时间来判断是否还有时间更新，没有就把主动权交给浏览器。等浏览器空闲通过
+`scheduler（调度器）`再次恢复执行单元来
+
+
+### fiber更新机制
+
+#### 初始化
+1. fiberRoot 首次构建应用，创建一个fr,作为整个react应用的根基
+2. rootFiber 一个组件一个rf
+3. workInProgress current
+  
+#### render commit
+- render阶段<br>
+<strong>
+核心思想就是diff对比，react首先对比childLanes来找到更新的组件。找到对应的组件后，执行组件的render函数，得到新的element对象，接下来就是新element和老fiber的diff，复用老fiber，创建新fiber。render阶段不会实质性执行更新，只会给fiber打上不同flag标准，证明当前fiber发生什么变化</strong>
+
+
+
+```js
+function workLoop (){
+    while (workInProgress !== null ) {
+      workInProgress = performUnitOfWork(workInProgress);
+    }
+}
+```
+每一个fiber看作一个执行单元，在调和过程中，每一个发生更新的fiber都会昨晚一次workInProgress。work Loop就是执行每一个单元的调度器。如果渲染没有被中断，那么workLoop会遍历一遍fiber树。performUnitOfWork 包括两个阶段 beginWork 和 completeWork
+beginWork:<br>
+1. beginWork：是向下调和的过程。对应组件执行部分生命周期，执行render,得到最新的children.
+向下遍历调和children,复用oldFiber（diff）
+2. completeUnitOfWork 向上归并的过程
+completeWork:<br>
+
+#### diff
+```html
+<div>
+  <p></p>
+  <ul>
+    <li></li>
+    <li></li>
+  </ul>
+  <span></span>
+</div>
+```
+React 会从最外层的 <div> 节点开始遍历，遍历到它的第一个子节点 <p>，然后继续递归遍历 <p> 的子节点，如果 <p> 没有子节点，则返回到上一层节点 <div>，再继续遍历 <div> 的下一个子节点 <ul>。当遍历完 <ul> 的所有子节点之后，再返回到 <div>，继续遍历 <div> 的下一个兄弟节点 <span>。最后遍历完整棵虚拟 DOM 树，形成了 DOM 树结构。
+
+
+- commit阶段
+dom更新前中后阶段。执行effectList 更新dom,执行生命周期，获取ref。
